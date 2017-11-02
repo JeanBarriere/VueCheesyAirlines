@@ -1,0 +1,113 @@
+.material-icons.md-18 {
+  font-size: 18px !important;
+}
+.material-icons.md-24 {
+  font-size: 24px !important;
+}
+.material-icons.md-36 {
+  font-size: 36px !important;
+}
+.material-icons.md-48 {
+  font-size: 48px !important;
+}
+.material-icons.md-60 {
+  font-size: 60px !important;
+}
+
+#main-container {
+  overflow-x: inherit;
+}
+
+.material-icons {
+  line-height: inherit;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+  cursor: hand;
+}
+
+.bg-f5 {
+  background-color: #F5F5F5;
+}
+
+.hp-20 {
+  height: 20px;
+}
+
+.hp-40 {
+  height: 40px;
+}
+
+.wp-100 {
+  width: 100px;
+}
+
+.wp-75 {
+  width: 75px;
+}
+
+.wp-200 {
+  width: 200px;
+}
+
+
+@mixin horizontal-gradient3($from, $in, $to) {
+  /* fallback/image non-cover color */
+  background-color: $from;
+
+  /* Firefox 3.6+ */
+  background-image: -moz-linear-gradient(left, $from 0%, $in, 50%, $to 100%);
+
+  /* Safari 4+, Chrome 1+ */
+  background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, $from), color-stop(50%, $in), color-stop(100%, $to));
+
+  /* Safari 5.1+, Chrome 10+ */
+  background-image: -webkit-linear-gradient(left, $from 0%, $in 50%, $to 100%);
+
+  /* Opera 11.10+ */
+  background-image: -o-linear-gradient(left, $from 0%, $in 50%, $to 100%);
+
+  /* IE10+ */
+  background: -ms-linear-gradient(left, $from 0%, $in 50%, $to 100%);
+
+  /* Standard */
+  background: linear-gradient(to right, $from 0%, $in 50%, $to 100%);
+
+  /* IE6-9 */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$from', endColorstr='$to',GradientType=1 );
+}
+
+@keyframes whiteOverlay {
+  from {
+    margin-left: -100px;
+  }
+  to {
+    margin-left: 100%;
+  }
+}
+
+.loader-white-overlay {
+
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100px;
+    height: 100%;
+    content: '';
+    @include horizontal-gradient3(transparent, white, transparent);
+    animation-name: whiteOverlay;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+  }
+}
+
+.border-radius-3x {
+  border-radius: 3px;
+}
+
+.t-80 {
+  top: 80px;
+}
