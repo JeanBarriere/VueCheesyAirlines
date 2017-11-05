@@ -6,23 +6,13 @@
         "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
       }
     }],
-    ["es2015", {"modules":false}],
-    ["stage-2"]
+    "stage-2"
   ],
-  "plugins": [
-    "transform-runtime",
-    "add-filehash",
-    ["transform-imports", {
-         "vuetify": {
-             "transform": "vuetify/src/components/${member}",
-             "preventFullImport": false
-         }
-     }]
-   ],
+  "plugins": ["transform-runtime"],
   "env": {
     "test": {
       "presets": ["env", "stage-2"],
-      "plugins": ["istanbul"]
+      "plugins": [ "istanbul" ]
     }
   }
 }

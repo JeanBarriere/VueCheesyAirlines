@@ -1,6 +1,6 @@
 # cheesyairlines
 
-> Front-End website for Cheesy Airlines
+> Cheesy Airlines Vue frontend
 
 ## Build Setup
 

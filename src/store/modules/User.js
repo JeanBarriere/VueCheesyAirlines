@@ -21,16 +21,16 @@ const getters = {
 }
 
 const mutations = {
-  SET_EMAIL (state, email) {
-    state.email = email
+  SET_EMAIL (state, payload) {
+    state.email = payload.email
   },
-  SET_TOKEN (state, token) {
-    state.token = token
+  SET_TOKEN (state, payload) {
+    state.token = payload.token
   },
   SAVE (state) {
     state.saved = true
   },
-  UNSAVE (state) {
+  unsave (state) {
     state.saved = false
   },
   SET_LOGGED_IN (state, loggedIn) {
@@ -39,17 +39,21 @@ const mutations = {
 }
 
 const actions = {
-  login ({ commit }, { email, password }) {
-    commit('SET_EMAIL', email)
-    // @todo call API LOGIN
-    commit('SET_LOGGED_IN', true)
-    commit('SAVE')
+  login ({ state, commit }, { email, password }) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (!state.saved) {
+          commit('SET_EMAIL', { email })
+          // @todo call API LOGIN
+          commit('SAVE')
+        }
+        commit('SET_LOGGED_IN', true)
+        resolve()
+      }, 1500)
+    })
   },
   logout ({ commit }) {
     commit('SET_LOGGED_IN', false)
-  },
-  unsave ({ commit }) {
-    commit('UNSAVE')
   }
 }
 

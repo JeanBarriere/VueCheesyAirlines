@@ -4,8 +4,9 @@ import VuexPersistence from 'vuex-persist'
 
 import modules from './modules'
 
-const vuexLocal = new VuexPersistence({
-  storage: window.localStorage
+const vuexPersist = new VuexPersistence({
+  strictMode: process.env.NODE_ENV !== 'production',
+  storage: localStorage
 })
 
 Vue.use(Vuex)
@@ -13,5 +14,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   modules,
   strict: process.env.NODE_ENV !== 'production',
-  plugins: [vuexLocal.plugin]
+  plugins: [vuexPersist.plugin],
+  mutations: {
+    RESTORE_MUTATION: vuexPersist.RESTORE_MUTATION
+  }
 })

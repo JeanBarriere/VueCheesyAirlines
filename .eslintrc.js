@@ -9,8 +9,10 @@ module.exports = {
   },
   env: {
     browser: true,
+    commonjs: true,
+    jquery: true
   },
-  // https://github.com/standard/standard/blob/master/docs/RULES-en.md
+  // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
   extends: 'standard',
   // required to lint *.vue files
   plugins: [

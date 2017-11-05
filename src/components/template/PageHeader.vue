@@ -6,7 +6,7 @@
           <!-- Left Section -->
           <div class="content-header-section">
               <!-- Toggle Sidebar -->
-              <button v-show="$store.getters.isHeaderIconShowed" type="button" class="btn btn-circle btn-dual-secondary" data-toggle="layout" data-action="sidebar_toggle">
+              <button v-show="isHeaderIconShowed" type="button" class="btn btn-circle btn-dual-secondary" data-toggle="layout" data-action="sidebar_toggle">
                   <i class="fa fa-navicon"></i>
               </button>
               <!-- END Toggle Sidebar -->
@@ -14,7 +14,7 @@
           <!-- END Left Section -->
 
           <!-- Right Section -->
-          <div class="content-header-section" v-if="$store.getters.isLoggedIn">
+          <div class="content-header-section" v-if="isLoggedIn === true">
               <!-- User Dropdown -->
               <div class="btn-group" role="group">
                   <button type="button" class="btn btn-rounded btn-alt-info" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,7 +41,7 @@
                       <!-- END Side Overlay -->
 
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" @click="signOut()" href="#">
+                      <a class="dropdown-item" @click="logout()" href="#">
                           <i class="si si-logout mr-5"></i> Sign Out
                       </a>
                   </div>
@@ -70,17 +70,17 @@
   </header>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'page-header',
-  data: () => ({
-
-  }),
+  computed: {
+    ...mapGetters(['isHeaderIconShowed', 'isLoggedIn'])
+  },
   methods: {
+    ...mapActions(['logout']),
     printPage: function () {
       window.print()
-    },
-    signOut: function () {
-      this.$store.dispatch('logout')
     }
   }
 }

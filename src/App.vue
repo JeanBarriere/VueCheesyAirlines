@@ -3,7 +3,7 @@
 
     <div id="page-loader"></div>
 
-    <div id="page-container" class="side-scroll main-content-boxed" :class="{ 'sidebar-o': $store.getters.isHeaderMenuShowed, 'page-header-inverse': $store.getters.isHeaderInversedShowed, 'page-header-fixed': $store.getters.isHeaderFixedShowed, 'page-header-glass': $store.getters.isHeaderGlassShowed }">
+    <div id="page-container" class="side-scroll main-content-boxed" :class="{ 'sidebar-o': isHeaderMenuShowed, 'page-header-inverse': isHeaderInversedShowed, 'page-header-fixed': isHeaderFixedShowed, 'page-header-glass': isHeaderGlassShowed }">
         <!-- Side Overlay-->
         <aside id="side-overlay">
             <!-- Side Overlay Scroll Container -->
@@ -133,7 +133,7 @@
 
                             <!-- Logo -->
                             <div class="content-header-item">
-                                <router-link :to="{ name: 'Welcome' }" class="link-effect font-w700">
+                                <router-link :to="{ name: 'welcome' }" class="link-effect font-w700">
                                     <svg width="18" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512; fill: #42a5f5;" xml:space="preserve">
                                         <g>
                                         	<g>
@@ -264,7 +264,7 @@
                                 </a>
                                 <ul>
                                     <li>
-                                        <router-link :to="{ name: 'Home'}">Go Home</router-link>
+                                        <router-link :to="{ name: 'welcome'}">Go Home</router-link>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0)">Link #2</a>
@@ -296,31 +296,24 @@
         <modals />
     </div>
 
-
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
 import PageHeader from '@/components/template/PageHeader'
 import PageFooter from '@/components/template/PageFooter'
 import Modals from '@/components/template/Modals'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'app',
+  computed: mapGetters(['isHeaderMenuShowed', 'isHeaderInversedShowed', 'isHeaderFixedShowed', 'isHeaderGlassShowed']),
   components: { PageHeader, PageFooter, Modals },
-  data() {
-    return {
-    }
-  },
-  methods: {
-  },
-  mounted() {
+  mounted () {
     this.$store.dispatch('logout')
   }
 }
 </script>
-
 
 <style lang="scss">
   @import "src/assets/css/base";

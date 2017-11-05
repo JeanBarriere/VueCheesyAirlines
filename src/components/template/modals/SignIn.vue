@@ -11,7 +11,7 @@
                           </button>
                       </div>
                   </div>
-                  <div v-if="this.$store.getters.isSaved !== true">
+                  <div v-if="isSaved === false">
                     <div class="block-content">
                       <div class="form-group row">
                         <div class="col-12">
@@ -38,8 +38,8 @@
                     <div class="block-content">
                       <div class="form-group row">
                         <div class="col-12 text-center">
-                          <p>Welcome back, <strong>{{ $store.getters.getEmail }}</strong></p>
-                          <a href="#" @click="normalForm()" class="nav-link">Not you ?</a>
+                          <p>Welcome back, <strong>{{ getEmail }}</strong></p>
+                          <a href="#" @click="unsave()" class="nav-link">Not you ?</a>
                         </div>
                       </div>
                     </div>
@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations } from 'vuex'
+
 export default {
   name: 'modal-sign-in',
   data: () => ({
@@ -69,24 +71,20 @@ export default {
     },
     signInLoad: false
   }),
+  computed: {
+    ...mapGetters(['isSaved', 'getEmail'])
+  },
   methods: {
+    ...mapMutations(['unsave']),
+    ...mapActions(['login']),
     signIn: function () {
       var self = this
-
       self.signInLoad = true
-      setTimeout(() => {
+      this.login(this.user).then(() => {
         jQuery('#modal-signin').modal('hide')
         self.signInLoad = false
-        self.form = (self.form === 'NORMAL' ? 'SAVED' : 'NORMAL')
-        this.$store.dispatch('login', this.user)
-      }, 3000)
-    },
-    normalForm: function () {
-      this.$store.dispatch('unsave')
+      })
     }
-  },
-  mounted () {
-    console.log(this.$store.getters.isSaved)
   }
 }
 </script>
