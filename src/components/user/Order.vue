@@ -6,8 +6,8 @@
             <nav class="breadcrumb bg-body-dark mb-0">
                 <router-link :to="{ name: 'welcome' }" class="breadcrumb-item">Home</router-link>
                 <router-link :to="{ name: 'account' }" class="breadcrumb-item">Account</router-link>
-                <router-link :to="{ name: 'tickets' }" class="breadcrumb-item">Tickets</router-link>
-                <span class="breadcrumb-item active">Ticket #2342112</span>
+                <router-link :to="{ name: 'account-orders' }" class="breadcrumb-item">Orders</router-link>
+                <span class="breadcrumb-item active">Order #2342112</span>
             </nav>
         </div>
     </div>
@@ -113,7 +113,7 @@
             <!-- Customer's Basic Info -->
             <div id="print-ticket-area" class="col-12">
               <div id="block-ticket-container" class="col-lg-6 float-left" v-for="(i, index) in tickets">
-                  <div id="breaker"></div>
+                  <div id="breaker" v-if="index !== 0"></div>
                   <div class="block block-ticket block-rounded block-themed text-left" href="#">
                       <div class="block-header bg-gd-lake">
                         <div class="block-title d-flex">

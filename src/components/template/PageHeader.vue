@@ -21,29 +21,12 @@
                       J. Barriere<i class="fa fa-angle-down ml-5"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right min-width-150" aria-labelledby="page-header-user-dropdown">
-                      <a class="dropdown-item" href="start_backend.html">
-                          <i class="si si-user mr-5"></i> Profile
-                      </a>
-                      <a class="dropdown-item d-flex align-items-center justify-content-between" href="start_backend.html">
-                          <span><i class="si si-envelope-open mr-5"></i> Inbox</span>
-                          <span class="badge badge-primary">3</span>
-                      </a>
-                      <a class="dropdown-item" href="start_backend.html">
-                          <i class="si si-note mr-5"></i> Invoices
-                      </a>
-                      <div class="dropdown-divider"></div>
-
-                      <!-- Toggle Side Overlay -->
-                      <!-- Layout API, functionality initialized in Codebase() -> uiApiLayout() -->
-                      <a class="dropdown-item" href="javascript:void(0)" data-toggle="layout" data-action="side_overlay_toggle">
-                          <i class="si si-wrench mr-5"></i> Settings
-                      </a>
-                      <!-- END Side Overlay -->
-
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" @click="logout()" href="#">
-                          <i class="si si-logout mr-5"></i> Sign Out
-                      </a>
+                    <router-link class="dropdown-item" :to="{ name: 'account' }"><i class="si si-user mr-5"></i> Profile</router-link>
+                    <router-link class="dropdown-item" :to="{ name: 'account-orders' }"><i class="si si-briefcase mr-5"></i> Orders</router-link>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" @click="logout()" href="#">
+                        <i class="si si-logout mr-5"></i> Sign Out
+                    </a>
                   </div>
               </div>
           </div>
@@ -52,7 +35,7 @@
             <!-- <button type="button" class="btn btn-rounded btn-alt-info" @click="signIn()">
                 Sign in
             </button> -->
-            <button v-if="$route.name === 'ticket'" @click="printPage()" type="button" class="btn btn-rounded btn-alt-success"><i class="material-icons">print</i></button>
+            <button v-if="$route.name === 'account-orders-order'" @click="printPage()" type="button" class="btn btn-rounded btn-alt-success"><i class="material-icons">print</i></button>
           </div>
           <!-- END Right Section -->
       </div>

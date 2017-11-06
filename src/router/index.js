@@ -4,7 +4,9 @@ import Store from '@/store'
 import Welcome from '@/components/Welcome'
 import Search from '@/components/Search'
 import View from '@/components/View'
-import Ticket from '@/components/Ticket'
+import Account from '@/components/user/Account'
+import Orders from '@/components/user/Orders'
+import Order from '@/components/user/Order'
 
 Vue.use(Router)
 
@@ -19,7 +21,7 @@ const router = new Router({
         menu: false,
         inversed: true,
         icon: false,
-        fixed: true
+        fixed: false
       }
     },
     {
@@ -43,9 +45,33 @@ const router = new Router({
       }
     },
     {
-      path: '/account/ticket',
-      name: 'ticket',
-      component: Ticket,
+      path: '/account',
+      name: 'account',
+      component: Account,
+      meta: {
+        inversed: false,
+        menu: false,
+        icon: false,
+        fixed: false,
+        glass: true
+      }
+    },
+    {
+      path: '/account/orders',
+      name: 'account-orders',
+      component: Orders,
+      meta: {
+        inversed: true,
+        menu: false,
+        icon: false,
+        fixed: true,
+        glass: false
+      }
+    },
+    {
+      path: '/account/order/:id',
+      name: 'account-orders-order',
+      component: Order,
       meta: {
         inversed: true,
         menu: false,
