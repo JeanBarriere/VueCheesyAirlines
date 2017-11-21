@@ -1,13 +1,20 @@
+import { ApiService } from '@/services/ApiService'
+const API = new ApiService()
+
 const state = {
   email: '',
+  name: '',
   token: '',
   saved: false,
   loggedIn: false
 }
 
 const getters = {
-  getEmail (state) {
+  getUserEmail (state) {
     return state.email
+  },
+  getUserName (state) {
+    return state.name
   },
   getToken (state) {
     return state.token
@@ -21,6 +28,13 @@ const getters = {
 }
 
 const mutations = {
+  SET_USER (state, payload) {
+    state.email = payload.email !== null ? payload.email : state.email
+    state.token = payload.token !== null ? payload.token : state.token
+    state.name = payload.name !== null ? payload.name : state.name
+    state.loggedIn = true
+    state.saved = true
+  },
   SET_EMAIL (state, payload) {
     state.email = payload.email
   },
@@ -39,17 +53,30 @@ const mutations = {
 }
 
 const actions = {
-  login ({ state, commit }, { email, password }) {
+  login ({ state, commit }, payload) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (!state.saved) {
-          commit('SET_EMAIL', { email })
-          // @todo call API LOGIN
-          commit('SAVE')
+      API.post('signin', payload, {
+        success: function (res) {
+          commit('SET_USER', { email: res.data.user.Email, token: res.data.token, name: res.data.user.Name })
+          resolve()
+        },
+        error: function (err) {
+          reject(err)
         }
-        commit('SET_LOGGED_IN', true)
-        resolve()
-      }, 1500)
+      })
+    })
+  },
+  register ({ state, commit }, payload) {
+    return new Promise((resolve, reject) => {
+      API.post('signup', payload, {
+        success: function (res) {
+          commit('SET_USER', { email: res.data.user.Email, token: res.data.token, name: res.data.user.Name })
+          resolve()
+        },
+        error: function (err) {
+          reject(err)
+        }
+      })
     })
   },
   logout ({ commit }) {

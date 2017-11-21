@@ -11,7 +11,7 @@
                           </button>
                       </div>
                   </div>
-                  <div v-if="isSaved === false">
+                  <!-- <div v-if="isSaved === false"> -->
                     <div class="block-content">
                       <div class="form-group row">
                         <div class="col-12">
@@ -30,8 +30,8 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div v-else>
+                  <!-- </div> -->
+                  <!-- <div v-else>
                     <div class="block-content block-content-full text-center bg-info-light">
                         <img class="img-avatar img-avatar96 img-avatar-thumb bg-gray-dark" src="static/assets/img/avatars/groot.jpg" alt="">
                     </div>
@@ -43,16 +43,21 @@
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
               </div>
               <div class="modal-footer">
                   <!-- <button type="button" class="btn btn-rounded btn-alt-primary d-flex justify-content-center" data-dismiss="modal"> -->
-                  <button type="button" class="btn btn-rounded btn-alt-primary d-flex justify-content-center btn-block" @click="signIn()" v-if="!signInLoad">
+                  <div class="d-flex container flex-column">
+                    <button type="button" class="btn btn-rounded btn-alt-primary d-flex justify-content-center btn-block" @click="signIn()" v-if="!signInLoad">
                       <i class="material-icons mb-5 mr-5">lock</i> Connect
-                  </button>
-                  <button type="button" class="btn btn-rounded btn-alt-primary d-flex justify-content-center btn-block disabled" v-if="signInLoad">
+                    </button>
+                    <button type="button" class="btn btn-link d-flex justify-content-center btn-block" @click="signUp()" v-if="!signInLoad">
+                      <i class="material-icons mb-5 mr-5">fiber_new</i> Don't have an account ?
+                    </button>
+                    <button type="button" class="btn btn-rounded btn-alt-primary d-flex justify-content-center btn-block disabled" v-if="signInLoad">
                       <i class="material-icons animated rubberBand fa-fw infinite">group_work</i>
-                  </button>
+                    </button>
+                  </div>
               </div>
           </div>
       </div>
@@ -66,13 +71,13 @@ export default {
   name: 'modal-sign-in',
   data: () => ({
     user: {
-      email: '',
+      email: this.getUserEmail,
       password: ''
     },
     signInLoad: false
   }),
   computed: {
-    ...mapGetters(['isSaved', 'getEmail'])
+    ...mapGetters(['isSaved', 'getUserEmail', 'getUserName'])
   },
   methods: {
     ...mapMutations(['unsave']),
@@ -81,9 +86,24 @@ export default {
       var self = this
       self.signInLoad = true
       this.login(this.user).then(() => {
+        self.signInLoad = false
         jQuery('#modal-signin').modal('hide')
+        this.$notify({
+          title: `Welcome back ${this.getUserName}`,
+          type: 'success'
+        })
+      }).catch(() => {
+        this.$notify({
+          title: 'Invalid credentials',
+          text: '<b>Username</b> or <b>Password</b> incorrect',
+          type: 'error'
+        })
         self.signInLoad = false
       })
+    },
+    signUp: function () {
+      jQuery('#modal-signin').modal('hide')
+      jQuery('#modal-signup').modal('show')
     }
   }
 }
@@ -92,5 +112,4 @@ export default {
 <style media="screen" lang="sass" scoped>
   .material-icons
     line-height: inherit
-
 </style>

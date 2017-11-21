@@ -13,7 +13,7 @@
                 <!-- END Avatar -->
 
                 <!-- Personal -->
-                <h1 class="h3 text-white font-w700 mb-10">John Smith</h1>
+                <h1 class="h3 text-white font-w700 mb-10">{{ getUserName }}</h1>
                 <!-- <h2 class="h5 text-white-op">
                   Customer
                 </h2> -->
@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'account',
   data: () => ({
@@ -103,6 +105,7 @@ export default {
         price: 120000
       }
     ]
-  })
+  }),
+  computed: mapGetters(['getUserName'])
 }
 </script>

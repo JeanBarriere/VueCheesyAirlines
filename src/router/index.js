@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Store from '@/store'
-import Welcome from '@/components/Welcome'
-import Search from '@/components/Search'
-import View from '@/components/View'
-import Account from '@/components/user/Account'
-import Orders from '@/components/user/Orders'
-import Order from '@/components/user/Order'
+import Welcome from '@/components/pages/public/Welcome'
+import Search from '@/components/pages/public/Search'
+import View from '@/components/pages/public/View'
+import Account from '@/components/pages/user/Account'
+import Orders from '@/components/pages/user/Orders'
+import Order from '@/components/pages/user/Order'
 
 Vue.use(Router)
 

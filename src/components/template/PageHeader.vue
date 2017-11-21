@@ -18,13 +18,13 @@
               <!-- User Dropdown -->
               <div class="btn-group" role="group">
                   <button type="button" class="btn btn-rounded btn-alt-info" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      J. Barriere<i class="fa fa-angle-down ml-5"></i>
+                      {{ getUserName }}<i class="fa fa-angle-down ml-5"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right min-width-150" aria-labelledby="page-header-user-dropdown">
                     <router-link class="dropdown-item" :to="{ name: 'account' }"><i class="si si-user mr-5"></i> Profile</router-link>
                     <router-link class="dropdown-item" :to="{ name: 'account-orders' }"><i class="si si-briefcase mr-5"></i> Orders</router-link>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" @click="logout()" href="#">
+                    <a class="dropdown-item" @click="signout()" href="#">
                         <i class="si si-logout mr-5"></i> Sign Out
                     </a>
                   </div>
@@ -58,12 +58,18 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'page-header',
   computed: {
-    ...mapGetters(['isHeaderIconShowed', 'isLoggedIn'])
+    ...mapGetters(['isHeaderIconShowed', 'isLoggedIn', 'getUserName'])
   },
   methods: {
     ...mapActions(['logout']),
     printPage: function () {
       window.print()
+    },
+    signout: function () {
+      this.logout()
+      if (this.$route.name === 'account' || this.$route.name === 'account-orders' || this.$route.name === 'account-orders-order') {
+        this.$router.push({ name: 'welcome' })
+      }
     }
   }
 }
