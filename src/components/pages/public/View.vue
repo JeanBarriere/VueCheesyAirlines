@@ -5,9 +5,12 @@
         <div class="bg-black-op-75">
             <div class="content content-top content-full text-left">
                 <div class="py-20">
-                    <h1 class="h2 font-w700 text-white mb-10"><i class="material-icons mr-20">flight</i>Bangkok</h1>
-                    <h1 class="h2 font-w700 text-white mb-10"><i class="material-icons mr-20">directions</i>Surat Thani</h1>
-                    <h2 class="h4 font-w400 text-white-op mb-0">Thu, 9 Nov</h2>
+                  <h1 class="h2 font-w700 text-white mb-10"><i class="material-icons mr-20">flight</i>{{ $route.query.from_name }}</h1>
+                  <h1 class="h2 font-w700 text-white mb-10"><i class="material-icons mr-20">directions</i>{{ $route.query.to_name }}</h1>
+                  <h2 class="h4 font-w400 text-white-op mb-0 float-left">{{ $route.query.date | moment('ll') }}</h2>
+                  <h2 class="h4 font-w400 text-white-op mb-0 float-right">
+                    {{ ($route.query.seatsAdult > 0 ? $route.query.seatsAdult + ' adult' + ($route.query.seatsAdult > 1 ? 's' : '') : '') + ($route.query.seatsAdult > 0 && $route.query.seatsChild > 0 ? ' and ' : '') + ($route.query.seatsChild > 0 ? $route.query.seatsChild + ' child' + ($route.query.seatsChild > 1 ? 'ren' : '') : '') }}
+                  </h2>
                 </div>
             </div>
         </div>
@@ -19,8 +22,8 @@
         <div class="content py-5 text-right">
             <nav class="breadcrumb bg-body-light mb-0">
                 <router-link :to="{ name: 'welcome' }" class="breadcrumb-item">Home</router-link>
-                <router-link :to="{ name: 'search' }" class="breadcrumb-item">Search</router-link>
-                <span class="breadcrumb-item active">Thai AirAsia 3331</span>
+                <router-link :to="{ name: 'search', query: $route.query }" class="breadcrumb-item">Search</router-link>
+                <span class="breadcrumb-item active">{{ flightNumber }}</span>
             </nav>
         </div>
         <div class="progress rounded-0">
@@ -34,52 +37,15 @@
 
         <div class="clearfix">
             <!-- Customer's Past Orders -->
-            <div class="col-lg-8 float-left">
+
+            <div class="col-lg-8 float-left" v-if="record !== null">
                 <div class="row">
-                  <div class="col-md-12 block block-rounded">
-                      <div class="block-content block-content-full clearfix">
-                        <div class="d-flex flex-row align-items-start">
-                          <div class="align-self-stretch text-center mr-20">
-                            <img src="static/assets/img/avatars/avatar0.jpg" class="img-avatar img-avatar-thumb" alt="company">
-                            <div class="font-size-sm font-w600 text-uppercase text-muted">AIR ASIA</div>
-                          </div>
-                          <div class="align-self-stretch mr-20">
-                            <div class="p2 font-w400">15:40 - 17:00 (1h20m)</div>
-                            <div class="p2 font-w700">DMK - URT</div>
-                          </div>
-                          <div class="align-self-stretch">
-                            <div class="p2 font-w700 text-muted">Direct</div>
-                          </div>
-                          <div class="align-self-stretch ml-auto text-right">
-                            <div class="font-size-h3 font-w600">780$</div>
-                            <div class="font-size-sm font-w600 text-lowercase text-muted">one way</div>
-                          </div>
-                        </div>
-
-                          <div class="d-flex flex-row align-items-start">
-                            <div class="align-self-stretch mr-20">
-                              <div class="h3 font-w700">15:00</div>
-                            </div>
-                            <div class="align-self-stretch mr-20">
-                              <div class="h3 font-w700 text-muted"><i class="material-icons">arrow_forward</i></div>
-                            </div>
-                            <div class="align-self-stretch mr-20">
-                              <div class="h3 font-w700">17:00</div>
-                              <div class="p2 font-w400 text-muted">Bangkok to Surat Thani</div>
-                              <div class="p2 font-w400 text-muted">Don Mueang Intl. (DMK) to Surat Thani Intl. (URT)</div>
-                              <div class="p2 font-w400 text-muted">Thai AirAsia 3331</div>
-                              <div class="p2 font-w400 text-muted">Economy (Y)</div>
-                            </div>
-                            <div class="align-self-stretch mr-20">
-                              <div class="h3 font-w700 text-muted">1h20m</div>
-                            </div>
-                          </div>
-
-                      </div>
+                  <div class="col-md-12 block block-rounded animated flipInX">
+                    <airport-result-details :data="record" />
                   </div>
 
-                  <div class="col-md-12 block block-rounded block-map">
-                      <div id="map" class="map"></div>
+                  <div class="col-md-12 block block-rounded block-map animated flipInX">
+                      <airport-result-map :data="record" />
                   </div>
                 </div>
             </div>
@@ -87,7 +53,7 @@
 
 
             <!-- Customer's Basic Info -->
-            <div class="col-lg-4 float-left">
+            <div class="col-lg-4 float-left" v-if="record !== null">
                 <div class="block block-rounded text-center" href="#">
                     <div class="block-content">
                         <div class="row items-push text-center">
@@ -96,11 +62,11 @@
                             </div>
                             <div class="col-12 d-flex">
                               <span>Travelers</span>
-                              <span class="ml-auto text-right">3</span>
+                              <span class="ml-auto text-right">{{ totalSeats }}</span>
                             </div>
                             <div class="col-12 d-flex">
                               <span class="ml-20">Flight</span>
-                              <span class="ml-auto text-right">$780</span>
+                              <span class="ml-auto text-right">${{ price }}</span>
                             </div>
                             <div class="col-12 d-flex">
                               <span class="ml-20">Tax and Fees</span>
@@ -108,15 +74,15 @@
                             </div>
                             <div class="col-12 d-flex">
                               <div class="font-size-h4 text-left">Sub Total</div>
-                              <div class="font-size-h4 text-right ml-auto">$2490</div>
+                              <div class="font-size-h4 text-right ml-auto">${{ (price * totalSeats) + 50 }}</div>
                             </div>
                             <div class="col-12 d-flex">
                               <div class="font-size-h4 text-left">VAT</div>
-                              <div class="font-size-h4 text-right ml-auto">7.0%</div>
+                              <div class="font-size-h4 text-right ml-auto">10 %</div>
                             </div>
                             <div class="col-12 d-flex">
                               <div class="font-size-h4 text-left">Total</div>
-                              <div class="font-size-h4 text-right ml-auto">$2 664,3</div>
+                              <div class="font-size-h4 text-right ml-auto">${{ Math.round((((price * totalSeats) + 50) + (((price * totalSeats) + 50) / 10)) * 100) / 100 }}</div>
                             </div>
 
                             <div class="col-12 d-flex">
@@ -136,115 +102,122 @@
 </template>
 
 <script>
+import AirportResultDetails from '@/components/utils/AirportResultDetails'
+import AirportResultMap from '@/components/utils/AirportResultMap'
+import neoInteger from '@/components/utils/neo4jInteger'
 import { mapGetters } from 'vuex'
-import countTo from 'vue-count-to'
-import 'leaflet-arc'
-import L from 'leaflet'
 
 export default {
   name: 'search',
-  components: { countTo },
+  components: { AirportResultDetails, AirportResultMap },
   data: () => ({
-    numbers: 10,
-    map: null,
-    airports: [],
-    markers: [],
-    arcs: []
+    record: null,
+    flightNumber: '',
+    totalSeats: 0,
+    price: 0,
+    infos: {}
   }),
-  computed: mapGetters(['isLoggedIn']),
+  computed: mapGetters(['isLoggedIn', 'getUserEmail']),
   methods: {
+    completePayment: function (token) {
+      var self = this
+      this.$swal({
+        title: 'Confirm payment',
+        type: 'warning',
+        text: 'Please confirm to process your order',
+        showCancelButton: true,
+        confirmButtonText: 'Book now !',
+        showLoaderOnConfirm: true,
+        preConfirm: function () {
+          return new Promise((resolve) => {
+            self.$api.postEncoded('booking', {
+              from: self.$route.query.from,
+              to: self.$route.query.to,
+              date: self.$route.query.date,
+              nb_passengers: self.totalSeats,
+              price: Math.round((((self.price * self.totalSeats) + 50) + (((self.price * self.totalSeats) + 50) / 10)) * 100).toString(),
+              company: self.record._fields[0].segments[0].relationship.properties.company_name,
+              stripe_token: token.id,
+              json: JSON.stringify(self.infos)
+            }, {
+              success: function (res) {
+                resolve(res)
+              },
+              error: function () {
+                self.$swal.showValidationError(
+                  'An error occured while booking your flight. Please try again.'
+                )
+              }
+            })
+          })
+        },
+        allowOutsideClick: false
+      }).then(function (result) {
+        if (result) {
+          self.$swal(
+            'Booked !',
+            'Thank you for booking your flight with Cheesy Airlines.',
+            'success'
+          ).then(() => {
+            self.$router.push({ name: 'account-orders-order', params: { id: result.data.mirror.ID } })
+          })
+        }
+      })
+    },
     buy: function () {
       if (this.isLoggedIn) {
+        var self = this
         this.$checkout.open({
-          name: 'Flight DMK - URT',
+          name: `Flight ${this.$route.query.from} - ${this.$route.query.to}`,
+          email: this.getUserEmail,
           currency: 'USD',
-          amount: 10000,
+          amount: Math.round((((this.price * this.totalSeats) + 50) + (((this.price * this.totalSeats) + 50) / 10)) * 100),
           token (token) {
-            console.log(token)
+            self.completePayment(token)
           }
         })
       } else {
-        this.$notify({
-          title: 'You need to login to buy a ticket',
-          type: 'warn'
+        self.$swal(
+          'Login required',
+          'You need to login to purchase your order',
+          'warn'
+        ).then(() => {
+          $('#modal-signin').modal('show')
         })
-        $('#modal-signin').modal('show')
       }
-    },
-    mouseOverArc: function (e) {
-      e.target.setStyle({ weight: 8, opacity: 1 })
-      e.target.redraw()
-    },
-    mouseOutArc: function (e) {
-      e.target.setStyle({ weight: 4, opacity: 0.8 })
-      e.target.redraw()
-    },
-    clickArc: function (e) {
-      this.map.fitBounds(e.target.getBounds())
-      L.popup().setContent('<p><b>Trip duration:</b> ' + this.airports[this.arcs.indexOf(e.target)].duration +
-                '<br><b>Departure time:</b> ' + this.airports[this.arcs.indexOf(e.target)].departureTime +
-                '<br>Some other infos: ' + '</p>')
-        .setLatLng(e.target.getCenter())
-        .openOn(this.map)
-    },
-    setAirportsInfos: function () {
-      this.airports.push({'name': 'LHR', 'coord': L.latLng(51.50, 0.09), 'duration': '1h05', 'departureTime': '10/25/17 07:00am'})
-      this.airports.push({'name': 'CDG', 'coord': L.latLng(49.00, 2.33), 'duration': '10h35', 'departureTime': '10/25/17 10:40am'})
-      this.airports.push({'name': 'BKK', 'coord': L.latLng(14.06, 100.60), 'duration': '5h40', 'departureTime': '10/29/17 06:40am'})
-      this.airports.push({'name': 'ICN', 'coord': L.latLng(37.28, 126.26), 'duration': '', 'departureTime': ''})
-    },
-    displayWaipointsMarkers: function () {
-      for (let i in this.airports) {
-        this.markers[i] = L.popup({
-          closeButton: false
-        }).setLatLng(this.airports[i].coord)
-          .setContent('<p><center>' + this.airports[i].name.fontsize(2).bold() + '</center></p>')
-        this.map.addLayer(this.markers[i])
-      }
-      this.map.fitBounds([this.airports[0].coord, this.airports[this.airports.length - 1].coord])
-    },
-    displayArcs: function () {
-      for (let i = 0; i < (this.airports.length - 1); i++) {
-        this.arcs[i] = L.Polyline.Arc(this.airports[i].coord, this.airports[i + 1].coord, {
-          color: '#868e96',
-          vertices: 500,
-          weight: 4,
-          opacity: 0.8
-        }).addTo(this.map)
-          .on('mouseover', this.mouseOverArc)
-          .on('mouseout', this.mouseOutArc)
-          .on('click', this.clickArc)
-      }
-    },
-    displayPath: function () {
-      this.setAirportsInfos()
-      this.displayWaipointsMarkers()
-      this.displayArcs()
-    },
-    initmap: function () {
-      this.map = L.map('map', {
-        closePopupOnClick: false,
-        worldCopyJump: true,
-        maxBounds: [[-90, -Infinity], [90, Infinity]],
-        minZoom: 3
-      })
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 18
-      }).addTo(this.map)
     }
   },
   mounted () {
-    console.log(this.$router.currentRoute.params)
-    this.initmap()
-    this.displayPath()
+    if (!this.$route.params.record || !this.$route.query.from || !this.$route.query.to || !this.$route.query.date || !this.$route.query.from_name || !this.$route.query.to_name || !this.$route.query.seatsAdult) {
+      this.$router.push({ name: 'search', query: this.$route.query })
+    } else {
+      let record = this.$route.params.record
+      this.flightNumber = record._fields[0].segments[0].relationship.properties.flight_number
+      let price = 0
+      for (let i = 0; i < record._fields[0].segments.length; i++) {
+        price += neoInteger.fromValue(record._fields[0].segments[i].relationship.properties.price).toNumber()
+      }
+      this.price = price
+      this.totalSeats = parseInt(this.$route.query.seatsAdult) + parseInt(this.$route.query.seatsChild)
+      this.infos = {
+        flight_number: record._fields[0].segments[0].relationship.properties.flight_number,
+        from_name: this.$route.query.from_name,
+        from_city: record._fields[0].start.properties.city,
+        to_name: this.$route.query.to_name,
+        to_city: record._fields[0].end.properties.city,
+        departure_date: new Date(neoInteger.fromValue(record._fields[0].segments[0].relationship.properties.departureDate).toNumber() * 1000),
+        arrival_date: new Date(neoInteger.fromValue(record._fields[0].segments[record._fields[0].segments.length - 1].relationship.properties.arrivalDate).toNumber() * 1000),
+        total_hours: Math.floor(neoInteger.fromValue(record._fields[2]).toNumber() / 3600),
+        total_minutes: Math.floor(neoInteger.fromValue(record._fields[2]).toNumber() % 60),
+        stops: record._fields[0].segments.length - 1
+      }
+      this.record = record
+    }
   }
 }
 </script>
 
 <style lang="sass">
-  @import "~leaflet/dist/leaflet.css"
-
   .block-map
     padding: 4px
     .map

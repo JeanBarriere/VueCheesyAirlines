@@ -7,7 +7,7 @@
                 <router-link :to="{ name: 'welcome' }" class="breadcrumb-item">Home</router-link>
                 <router-link :to="{ name: 'account' }" class="breadcrumb-item">Account</router-link>
                 <router-link :to="{ name: 'account-orders' }" class="breadcrumb-item">Orders</router-link>
-                <span class="breadcrumb-item active">Order #2342112</span>
+                <span class="breadcrumb-item active">Order #{{ booking !== null ? booking.flightNumber : '' }}</span>
             </nav>
         </div>
     </div>
@@ -17,92 +17,58 @@
     <div class="content">
 
         <div class="clearfix">
-            <!-- Customer's Past Orders -->
 
-
-                <div class="col-lg-8 float-left">
+                <div class="col-12" v-if="booking !== null">
                     <div class="row">
-                      <div class="col-md-12 block block-rounded">
+                      <div class="col-12 block block-rounded">
                           <div class="block-content block-content-full clearfix">
-                            <div class="d-flex flex-row align-items-start">
-                              <div class="align-self-stretch text-center mr-20">
+                            <div class="d-flex flex-row align-items-stretch mb-20">
+                              <div class="text-center mr-20">
                                 <img src="static/assets/img/avatars/avatar0.jpg" class="img-avatar img-avatar-thumb" alt="company">
-                                <div class="font-size-sm font-w600 text-uppercase text-muted">AIR ASIA</div>
+                                <div class="font-size-sm font-w600 text-uppercase text-muted">{{ booking.company }}</div>
                               </div>
-                              <div class="align-self-stretch mr-20">
-                                <div class="p2 font-w400">15:40 - 17:00 (1h20m)</div>
-                                <div class="p2 font-w700">DMK - URT</div>
+                              <div class="align-self-center mr-20">
+                                <div class="h4 font-w400">{{ booking.from }} - {{ booking.to }}</div>
                               </div>
-                              <div class="align-self-stretch">
-                                <div class="p2 font-w700 text-muted">Direct</div>
+                              <div class="align-self-center">
+                                <div class="h4 font-w700 text-muted">{{ booking.stops === 0 ? 'Direct' : booking.stops + ' stop' + (booking.stops > 1 ? 's' : '') }}</div>
                               </div>
-                              <div class="align-self-stretch ml-auto text-right">
-                                <div class="font-size-h3 font-w600">780$</div>
+                              <div class="ml-auto text-right">
+                                <div class="font-size-h3 font-w600">{{ booking.cost / 100 }}$</div>
                                 <div class="font-size-sm font-w600 text-lowercase text-muted">one way</div>
+                                <div class="font-size-sm font-w600 text-lowercase text-muted">{{ booking.nb_passengers + ' ticket' + (booking.nb_passengers > 1 ? 's' : '') }}</div>
                               </div>
                             </div>
 
-                              <div class="d-flex flex-row align-items-start">
-                                <div class="align-self-stretch mr-20">
-                                  <div class="h3 font-w700">15:00</div>
+                              <div class="d-flex flex-column">
+                                <div class="d-flex justify-content-start">
+                                  <div class="mr-20">
+                                    <div class="h3 font-w700">{{ booking.departureDate | moment('HH:mm') }}</div>
+                                  </div>
+                                  <div class="mr-20">
+                                    <div class="h3 font-w700 text-muted"><i class="material-icons">arrow_forward</i></div>
+                                  </div>
+                                  <div class="mr-20">
+                                    <div class="h3 font-w700">{{ booking.arrivalDate | moment('HH:mm') }}</div>
+                                  </div>
+                                  <div class="ml-auto">
+                                    <div class="h3 font-w700 text-muted ml-auto">{{ booking.totalHours + 'h' + (booking.totalMinutes > 0 ? booking.totalMinutes : '') }} {{ booking.totalDays > 0 ? `+${booking.totalDays}day` + (booking.totalDays > 1 ? 's' : '') : '' }}</div>
+                                  </div>
                                 </div>
-                                <div class="align-self-stretch mr-20">
-                                  <div class="h3 font-w700 text-muted"><i class="material-icons">arrow_forward</i></div>
-                                </div>
-                                <div class="align-self-stretch mr-20">
-                                  <div class="h3 font-w700">17:00</div>
-                                  <div class="p2 font-w400 text-muted">Bangkok to Surat Thani</div>
-                                  <div class="p2 font-w400 text-muted">Don Mueang Intl. (DMK) to Surat Thani Intl. (URT)</div>
-                                  <div class="p2 font-w400 text-muted">Thai AirAsia 3331</div>
-                                  <div class="p2 font-w400 text-muted">Economy (Y)</div>
-                                </div>
-                                <div class="align-self-stretch mr-20">
-                                  <div class="h3 font-w700 text-muted">1h20m</div>
+                                <div class="align-self-stretch">
+                                  <div class="p2 font-w400 text-muted">{{ booking.fromCity }} to {{ booking.toCity }}</div>
+                                  <div class="p2 font-w400 text-muted">{{ booking.fromName }} ({{ booking.from }}) to {{ booking.toName }} ({{ booking.to }})</div>
+                                  <div class="p2 font-w400 text-muted">{{ booking.company }} {{ booking.flightNumber }}</div>
                                 </div>
                               </div>
 
-                          </div>
-                      </div>
-                    </div>
-                </div>
-                <!-- END Customer's Past Orders -->
-
-
-                <!-- Customer's Basic Info -->
-                <div class="col-lg-4 float-left">
-                    <div class="block block-rounded text-center" href="#">
-                        <div class="block-content">
-                            <div class="row items-push text-center">
-                                <div class="col-12 d-flex">
-                                  <div class="font-size-h4 text-left">Trip Summary</div>
-                                </div>
-                                <div class="col-12 d-flex">
-                                  <span>Travelers</span>
-                                  <span class="ml-auto text-right">3</span>
-                                </div>
-                                <div class="col-12 d-flex">
-                                  <span class="ml-20">Flight</span>
-                                  <span class="ml-auto text-right">$780</span>
-                                </div>
-                                <div class="col-12 d-flex">
-                                  <span class="ml-20">Tax and Fees</span>
-                                  <span class="ml-auto text-right">$50</span>
-                                </div>
-                                <div class="col-12 d-flex">
-                                  <div class="font-size-h4 text-left">Sub Total</div>
-                                  <div class="font-size-h4 text-right ml-auto">$2490</div>
-                                </div>
-                                <div class="col-12 d-flex">
-                                  <div class="font-size-h4 text-left">VAT</div>
-                                  <div class="font-size-h4 text-right ml-auto">7.0%</div>
-                                </div>
-                                <div class="col-12 d-flex">
-                                  <div class="font-size-h4 text-left">Total</div>
-                                  <div class="font-size-h4 text-right ml-auto">$2 664,3</div>
-                                </div>
-
-                                <div class="col-12 d-flex">
+                                <div class="col-12 d-flex mt-20" v-if="booking.status !== 'Canceled'">
                                   <button type="button" @click="cancelTrip()" class="btn btn-lg btn-block btn-alt-danger d-flex justify-content-center"><i class="material-icons mr-5">money_off</i>Cancel the trip</button>
+                                </div>
+                                <div class="col-12 d-flex mt-20" v-else>
+                                  <div class="h3 font-w400 text-muted mx-auto text-center">
+                                    <i class="si si-close mr-20"></i>Trip canceled
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -111,37 +77,37 @@
 
 
             <!-- Customer's Basic Info -->
-            <div id="print-ticket-area" class="col-12">
-              <div id="block-ticket-container" class="col-lg-6 float-left" v-for="(i, index) in tickets">
+            <div id="print-ticket-area" class="col-12" v-if="booking !== null && booking.status !== 'Canceled'">
+              <div id="block-ticket-container" class="col-lg-6 float-left" v-for="(i, index) in parseInt(booking.nb_passengers)">
                   <div id="breaker" v-if="index !== 0"></div>
                   <div class="block block-ticket block-rounded block-themed text-left" href="#">
                       <div class="block-header bg-gd-lake">
                         <div class="block-title d-flex">
-                          <div class="h2 font-w300 mb-0">John Smith</div>
-                          <div class="p2 font-w700 ml-auto d-flex align-self-center justify-content-center">Ticket #2342112</div>
+                          <div class="h2 font-w300 mb-0">{{ getUserName }}</div>
+                          <div class="p2 font-w700 ml-auto d-flex align-self-center justify-content-center">Ticket #{{ booking.flightNumber + '_' + i }}</div>
                         </div>
                       </div>
                       <div class="">
                           <div class="block-ticket-head">
                             <div class="d-flex flex-row">
                               <div class="col-5 align-self-stretch text-left">
-                                <div class="h2 font-w400 mb-0">DMK{{index}}</div>
-                                <div class="p2 font-w700 text-muted">Don Mueang</div>
-                                <div class="h4 font-w700">01:45 PM</div>
+                                <div class="h2 font-w400 mb-0">{{ booking.from }}</div>
+                                <div class="p2 font-w700 text-muted">{{ booking.fromName }}</div>
+                                <div class="h4 font-w700">{{ booking.departureDate | moment('LT') }}</div>
                               </div>
                               <div class="col-2 d-flex ml-auto flex-row align-self-center justify-content-center">
                                 <i class="material-icons fa-fw fa-rotate-90">flight</i>
                               </div>
                               <div class="col-5 ml-auto align-self-stretch text-right">
-                                <div class="h2 font-w400 mb-0">URT</div>
-                                <div class="p2 font-w700 text-muted">Surat Thani</div>
-                                <div class="h4 font-w700">02:45 PM</div>
+                                <div class="h2 font-w400 mb-0">{{ booking.to }}</div>
+                                <div class="p2 font-w700 text-muted">{{ booking.toName }}</div>
+                                <div class="h4 font-w700">{{ booking.arrivalDate | moment('LT') }}</div>
                               </div>
                             </div>
                             <div class="d-flex flex-row">
                               <div class="col-12 text-center mb-10">
                                 <div class="p2 font-w700 text-muted">
-                                  17 NOV 2017
+                                  {{ booking.departureDate | moment('LL') }}
                                 </div>
                               </div>
                             </div>
@@ -150,25 +116,25 @@
                             <div class="d-flex flex-row mb-50 p-20">
                               <div class="col-6 align-self-stretch text-center">
                                 <i class="si si-plane fa-2x text-primary"></i>
-                                <div class="h3 font-w700 text-primary">AF1032</div>
+                                <div class="h3 font-w700 text-primary">{{ booking.flightNumber }}</div>
                                 <i class="si si-lock fa-2x text-success"></i>
-                                <div class="h3 font-w700 mb-0 text-success">3282921</div>
+                                <div class="h3 font-w700 mb-0 text-success">{{ booking.departureDate | moment('YYMMDD') }}{{ booking.arrivalDate | moment('MMDD') }}{{ i }}</div>
                               </div>
                               <div class="col-6 align-self-stretch text-center d-flex align-self-center justify-content-center">
-                                <qr-code class="d-flex align-self-center justify-content-center" :val="'http://google.com/'" :bg-color="'#fff'" :fg-color="'#000'" />
+                                <qr-code class="d-flex align-self-center justify-content-center" :val="'https://www.cheesy.xyz/#/account/order/' + $route.params.id + '?ticket=' + i" :bg-color="'#fff'" :fg-color="'#000'" />
                               </div>
                             </div>
                             <div class="d-flex flex-row">
                               <div class="col-4 align-self-stretch text-center">
-                                <div class="h3 font-w700 mb-5 border-b pb-10">32A</div>
+                                <div class="h3 font-w700 mb-5 border-b pb-10">-</div>
                                 <div class="p2 font-w700 text-muted">SEAT</div>
                               </div>
                               <div class="col-4 align-self-stretch text-center">
-                                <div class="h3 font-w700 mb-5 border-b pb-10">3</div>
+                                <div class="h3 font-w700 mb-5 border-b pb-10">-</div>
                                 <div class="p2 font-w700 text-muted">GATE</div>
                               </div>
                               <div class="col-4 align-self-stretch text-center">
-                                <div class="h3 font-w700 mb-5 border-b pb-10">1:05PM</div>
+                                <div class="h3 font-w700 mb-5 border-b pb-10">{{ booking.departureDate | moment('LT') }}</div>
                                 <div class="p2 font-w700 text-muted">TIME</div>
                               </div>
                             </div>
@@ -188,13 +154,16 @@
 
 <script>
 import QrCode from '@/components/utils/QrCode'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ticket',
   data: () => ({
-    tickets: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    tickets: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    booking: null
   }),
   components: { QrCode },
+  computed: mapGetters(['getUserName']),
   methods: {
     cancelTrip: function () {
       var self = this
@@ -210,14 +179,24 @@ export default {
         cancelButtonClass: 'btn btn-lg btn-alt-danger',
         buttonsStyling: false
       }).then(function () {
-        self.$swal(
-          'Refunded!',
-          'You have been refunded and your options have been released.',
-          'success'
-        )
+        self.$api.post(`booking/${self.$route.params.id}/cancel`, {}, {
+          success: function () {
+            self.booking.status = 'Canceled'
+            self.$swal(
+              'Refunded!',
+              'You have been refunded and your options have been released.',
+              'success'
+            )
+          },
+          error: function () {
+            self.$swal(
+              'Error',
+              'Error while canceling the trip. Your trip remains unchanged',
+              'error'
+            )
+          }
+        })
       }, function (dismiss) {
-        // dismiss can be 'cancel', 'overlay',
-        // 'close', and 'timer'
         if (dismiss === 'cancel') {
           self.$swal(
             'Cancelled',
@@ -227,6 +206,37 @@ export default {
         }
       })
     }
+  },
+  mounted: function () {
+    var self = this
+    this.$api.get(`booking/${this.$route.params.id}`, {}, {
+      success: function (res) {
+        let booking = res.data.mirror
+        try {
+          let obj = JSON.parse(booking.json)
+          booking.fromName = obj.from_name ? obj.from_name : 'Heaven'
+          booking.fromCity = obj.from_city ? obj.from_city : 'Heaven'
+          booking.toName = obj.to_name ? obj.to_name : 'Hell'
+          booking.toCity = obj.to_city ? obj.to_city : 'Hell'
+          booking.departureDate = obj.departure_date ? new Date(obj.departure_date) : new Date()
+          booking.arrivalDate = obj.arrival_date ? new Date(obj.arrival_date) : new Date()
+          booking.flightNumber = obj.flight_number ? obj.flight_number : 'CHS0001'
+          booking.totalDays = obj.total_hours ? Math.floor(obj.total_hours / 24) : 0
+          booking.totalHours = obj.total_hours ? obj.total_hours : 0
+          booking.totalMinutes = obj.total_minutes ? obj.total_minutes : 0
+          booking.stops = obj.stops ? obj.stops : 0
+        } catch (e) {}
+        self.booking = booking
+      },
+      error: function () {
+        self.$notify({
+          type: 'error',
+          title: 'Error while loading the book.'
+        })
+        self.loadingBooks = false
+        self.$router.push({ name: 'account-orders' })
+      }
+    })
   }
 }
 </script>

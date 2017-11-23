@@ -25,8 +25,11 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'app',
-  computed: mapGetters(['isHeaderMenuShowed', 'isHeaderInversedShowed', 'isHeaderFixedShowed', 'isHeaderGlassShowed']),
-  components: { PageHeader, PageFooter, Modals }
+  computed: mapGetters(['isHeaderMenuShowed', 'isHeaderInversedShowed', 'isHeaderFixedShowed', 'isHeaderGlassShowed', 'getUserToken']),
+  components: { PageHeader, PageFooter, Modals },
+  mounted: function () {
+    this.$api.set(this.getUserToken)
+  }
 }
 </script>
 

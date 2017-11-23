@@ -1,6 +1,6 @@
 {
   "name": "cheesyairlines",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Cheesy Airlines Vue frontend",
   "author": "Jean BARRIERE <jean.barriere@epitech.eu>",
   "private": true,
@@ -100,6 +100,7 @@
     "vue-sweetalert2": "^1.0.7",
     "vue-template-compiler": "^2.5.7",
     "vue2-leaflet": "^0.0.57",
+    "vuejs-datepicker": "^0.9.20",
     "webpack": "^3.7.1",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-middleware": "^1.12.0",

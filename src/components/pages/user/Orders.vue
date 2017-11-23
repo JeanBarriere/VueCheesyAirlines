@@ -20,25 +20,29 @@
             <i class="si si-briefcase mr-5"></i> Orders
         </h2>
         <div class="row items-push">
-            <div v-for="ticket in tickets" class="col-md-6 col-xl-3">
-                <div class="block block-rounded ribbon ribbon-modern ribbon-primary text-center">
-                    <div class="ribbon-box">$ {{ ticket.price / 100 }}</div>
+            <div v-if="loadingBooks" class="col-md-6 col-xl-3">
+              <loader-book />
+            </div>
+            <div v-else v-for="booking in bookings" class="col-md-6 col-xl-3">
+                <div class="block block-rounded ribbon ribbon-modern text-center" :class="{'ribbon-primary': booking.status !== 'Canceled', 'ribbon-danger': booking.status === 'Canceled'}">
+                    <div class="ribbon-box" v-if="booking.status !== 'Canceled'">$ {{ booking.cost / 100 }}</div>
+                    <div class="ribbon-box" v-else>Canceled</div>
                     <div class="block-content block-content-full">
                         <div class="item item-circle bg-danger text-danger-light mx-auto my-20">
                             <i class="fa fa-globe"></i>
                         </div>
                         <div class="text-info">
-                            <span>{{ ticket.id }}</span>
+                            <span>{{ booking.company + ' ' + booking.flightNumber }}</span>
                         </div>
                     </div>
                     <div class="block-content block-content-full block-content-sm bg-body-light">
                         <div class="font-w600 mb-5">Departure</div>
-                        <div class="font-size-sm text-muted">{{ ticket.from }} {{ ticket.dateFrom | moment('MM/DD/YY HH:mm') }}</div>
+                        <div class="font-size-sm text-muted">{{ booking.from }} {{ booking.departureDate | moment('MM/DD/YY HH:mm') }}</div>
                         <div class="font-w600 mb-5">Arrival</div>
-                        <div class="font-size-sm text-muted">{{ ticket.to }} {{ ticket.dateTo | moment('MM/DD/YY HH:mm') }}</div>
+                        <div class="font-size-sm text-muted">{{ booking.to }} {{ booking.arrivalDate | moment('MM/DD/YY HH:mm') }}</div>
                     </div>
                     <div class="block-content block-content-full">
-                        <router-link class="btn btn-rounded btn-alt-secondary" :to="{ name: 'account-orders-order', params: { id: ticket.ref }}"><i class="fa fa-briefcase mr-5"></i>View Tickets ({{ ticket.number }})</router-link>
+                        <router-link class="btn btn-rounded btn-alt-secondary" :to="{ name: 'account-orders-order', params: { id: booking.ID }}"><i class="fa fa-briefcase mr-5"></i>View Tickets ({{ booking.nb_passengers }})</router-link>
                     </div>
                 </div>
             </div>
@@ -50,601 +54,43 @@
 </template>
 
 <script>
+import LoaderBook from '@/components/template/LoaderBook'
+
 export default {
   name: 'account-tickets',
+  components: { LoaderBook },
   data: () => ({
-    tickets: [
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
+    bookings: [],
+    loadingBooks: true
+  }),
+  mounted: function () {
+    var self = this
+    this.$api.get('bookings', {}, {
+      success: function (res) {
+        let bookings = res.data.bookings
+        for (let i = 0; i < bookings.length; i++) {
+          try {
+            let obj = JSON.parse(bookings[i].json)
+            bookings[i].fromName = obj.from_name
+            bookings[i].toName = obj.to_name
+            bookings[i].departureDate = new Date(obj.departure_date)
+            bookings[i].arrivalDate = new Date(obj.arrival_date)
+            bookings[i].flightNumber = obj.flight_number
+            bookings[i].totalHours = obj.total_hours
+            bookings[i].totalMinutes = obj.total_minutes
+          } catch (e) {}
+        }
+        self.bookings = bookings
+        self.loadingBooks = false
       },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'KD213',
-        ref: 'KD213-171008-3495832',
-        number: 6,
-        from: 'BKK',
-        to: 'URT',
-        dateFrom: '2017-10-08',
-        dateTo: '2017-10-08',
-        price: 240040
-      },
-      {
-        id: 'AF1666',
-        ref: 'AF1666-170804-12342839',
-        number: 1,
-        from: 'CDG',
-        to: 'BKK',
-        dateFrom: '2017-08-04 15:20',
-        dateTo: '2017-08-05 07:30',
-        price: 120000
+      error: function () {
+        self.$notify({
+          type: 'error',
+          title: 'Error while loading your bookings. Try again'
+        })
+        self.loadingBooks = false
       }
-    ]
-  })
+    })
+  }
 }
 </script>

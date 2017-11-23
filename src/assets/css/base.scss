@@ -27,6 +27,10 @@
   cursor: hand;
 }
 
+.pr {
+  position: relative;
+}
+
 .bg-f5 {
   background-color: #F5F5F5;
 }
@@ -35,12 +39,20 @@
   height: 20px;
 }
 
+.hp-30 {
+  height: 30px;
+}
+
 .hp-40 {
   height: 40px;
 }
 
 .wp-100 {
   width: 100px;
+}
+
+.wp-50 {
+  width: 50px;
 }
 
 .wp-75 {
@@ -110,4 +122,28 @@
 
 .t-80 {
   top: 80px;
+}
+
+.form-calendar-material {
+  width: 100%;
+}
+
+.form-calendar-material > div > .form-control {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  border-color: transparent;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: 0 1px 0 #dcdfe3;
+  transition: box-shadow .3s ease-out;
+  border-style: solid;
+}
+
+.img-company-thumb {
+  border: 4px solid #ddd
+}
+
+.mc-auto > * {
+  margin: auto
 }

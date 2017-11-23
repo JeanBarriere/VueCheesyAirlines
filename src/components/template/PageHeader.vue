@@ -3,19 +3,12 @@
   <header id="page-header">
       <!-- Header Content -->
       <div class="content-header">
-          <!-- Left Section -->
           <div class="content-header-section">
-              <!-- Toggle Sidebar -->
               <button v-show="isHeaderIconShowed" type="button" class="btn btn-circle btn-dual-secondary" data-toggle="layout" data-action="sidebar_toggle">
                   <i class="fa fa-navicon"></i>
               </button>
-              <!-- END Toggle Sidebar -->
           </div>
-          <!-- END Left Section -->
-
-          <!-- Right Section -->
           <div class="content-header-section" v-if="isLoggedIn === true">
-              <!-- User Dropdown -->
               <div class="btn-group" role="group">
                   <button type="button" class="btn btn-rounded btn-alt-info" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       {{ getUserName }}<i class="fa fa-angle-down ml-5"></i>
@@ -29,12 +22,10 @@
                     </a>
                   </div>
               </div>
+              <button v-if="$route.name === 'account-orders-order'" @click="printPage()" type="button" class="btn btn-rounded btn-alt-success"><i class="material-icons">print</i></button>
           </div>
           <div class="content-header-section" v-else>
             <button type="button" class="btn btn-rounded btn-alt-info" data-toggle="modal" data-target="#modal-signin">Sign in</button>
-            <!-- <button type="button" class="btn btn-rounded btn-alt-info" @click="signIn()">
-                Sign in
-            </button> -->
             <button v-if="$route.name === 'account-orders-order'" @click="printPage()" type="button" class="btn btn-rounded btn-alt-success"><i class="material-icons">print</i></button>
           </div>
           <!-- END Right Section -->

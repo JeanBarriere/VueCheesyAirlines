@@ -75,7 +75,7 @@ export default {
       firstname: '',
       lastname: '',
       name: '',
-      email: this.getUserEmail,
+      email: '',
       password: ''
     },
     signUpLoad: false
@@ -118,6 +118,9 @@ export default {
       jQuery('#modal-signup').modal('hide')
       jQuery('#modal-signin').modal('show')
     }
+  },
+  mounted: function () {
+    this.user.email = this.getUserEmail
   }
 }
 </script>

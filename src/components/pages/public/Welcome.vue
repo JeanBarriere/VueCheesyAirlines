@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-image" style="background-image: url('static/assets/img/backgrounds/search.jpg');">
+  <div class="bg-image" style="background-image: url('static/assets/img/backgrounds/search.jpg'); max-height:100vh; overflow-y: auto; overflow-x: hidden;">
     <div class="hero">
       <div class="hero-inner">
         <div class="content content-full text-center">
@@ -20,8 +20,8 @@
                               <span class="input-group-addon">
                                 <i class="material-icons">{{ reverse ? 'flight_land' : 'flight_takeoff' }}</i>
                               </span>
-                              <input type="text" class="countries form-control" id="gen_form_from" name="gen_form_from" :placeholder="reverse ? 'TO' : 'FROM'">
-                              <span class="input-group-addon">...</span>
+                              <input type="text" class="form-control" id="gen_form_from" name="gen_form_from" :placeholder="reverse ? 'TO' : 'FROM'">
+                              <span class="input-group-addon">{{ search.from }}</span>
                             </div>
                           </div>
                           <div class="col-12">
@@ -29,8 +29,8 @@
                               <span class="input-group-addon">
                                 <i class="material-icons">{{ reverse ? 'flight_takeoff' : 'flight_land' }}</i>
                               </span>
-                              <input type="text" class="countries form-control" id="gen_form_to" name="gen_form_to" :placeholder="reverse ? 'FROM' : 'TO'">
-                              <span class="input-group-addon">...</span>
+                              <input type="text" class="form-control" id="gen_form_to" name="gen_form_to" :placeholder="reverse ? 'FROM' : 'TO'">
+                              <span class="input-group-addon">{{ search.to }}</span>
                             </div>
                           </div>
                         </div>
@@ -48,158 +48,64 @@
 
               <div class="col-lg-6">
                 <div class="block block-rounded">
-                  <div class="block-content p-10">
+                  <div class="block-content block-content-full clearfix">
                     <div class="row">
                         <div class="col-12">
-                          <div class="form-group row">
-                            <!-- <div class="col-lg-12" v-show="genFormType === 1"> -->
-                            <div class="col-12">
-                              <div class="form-material input-group">
-                                <span class="input-group-addon">
-                                  <i class="material-icons">event</i>
-                                </span>
-                                <input type="text" class="js-datepicker form-control" id="onewayfrom" name="onewayfrom" data-week-start="1" data-autoclose="true" data-today-highlight="true" data-date-format="mm/dd/yy" placeholder="DATE">
-                              </div>
-                            </div>
-                            <!-- <div class="col-lg-12" v-show="genFormType === 0">
-                              <div class="form-material input-daterange input-group" data-date-format="mm/dd/yy" data-week-start="1" data-autoclose="true" data-today-highlight="true">
-                                <span class="input-group-addon">
-                                  <i class="material-icons">event</i>
-                                </span>
-                                <input type="text" class="form-control" id="roundfrom" name="roundfrom" placeholder="FROM" data-week-start="1" data-autoclose="true" data-today-highlight="true">
-                                <span class="input-group-addon font-w600">TO</span>
-                                <input type="text" class="form-control" id="roundto" name="roundto" placeholder="DATE" data-week-start="1" data-autoclose="true" data-today-highlight="true">
-                              </div>
-                            </div> -->
-                          </div>
+                          <datepicker v-model="search.date" placeholder="DATE" wrapper-class="container mt-20 mb-20 mc-auto p-0" inline />
                         </div>
-                      <div class="col-12 d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                        <div class="form-group row">
-                          <div class="col-2 d-flex justify-content-center">
-                            <div class="row align-self-center">
-                              <i class="material-icons">event_seat</i>
-                            </div>
-                          </div>
-                          <div class="col-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                            <div class="row">
-                              <div class="dropup" role="group">
-                                  <button type="button" class="btn btn-alt-info" id="seat_form_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      {{ (search.seats.adults > 0 ? search.seats.adults + ' adult' + (search.seats.adults > 1 ? 's' : '') : '') + (search.seats.adults > 0 && search.seats.children > 0 ? ' and ' : '') + (search.seats.children > 0 ? search.seats.children + ' child' + (search.seats.children > 1 ? 'ren' : '') : '') }}
-                                  </button>
-                                  <div class="dropdown-menu" aria-labelledby="seat_form_dropdown">
-                                      <h6 class="dropdown-header">Adults</h6>
-                                      <div class="btn-group" role="group" aria-label="adultsGroup">
-                                        <button type="button" :disabled="search.seats.adults === 1" @click.stop.prevent="search.seats.adults -= (search.seats.adults > 1 ? 1 : 0)" class="btn btn-alt-secondary">
-                                          <i class="fa fa-minus"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-alt-secondary" disabled="true">
-                                          {{ search.seats.adults }}
-                                        </button>
-                                        <button type="button" :disabled="search.seats.adults === 9" @click.stop.prevent="search.seats.adults += (search.seats.adults < 9 ? 1 : 0)" class="btn btn-alt-secondary">
-                                        <i class="fa fa-plus"></i>
-                                        </button>
+                        <div class="col-12">
+                          <div class="form-group row">
+                            <div class="col-12">
+                                <div class="dropup" role="group">
+                                    <button type="button" class="btn btn-alt-info btn-block d-flex justify-content-center" id="seat_form_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons mr-20">event_seat</i> {{ (search.seats.adults > 0 ? search.seats.adults + ' adult' + (search.seats.adults > 1 ? 's' : '') : '') + (search.seats.adults > 0 && search.seats.children > 0 ? ' and ' : '') + (search.seats.children > 0 ? search.seats.children + ' child' + (search.seats.children > 1 ? 'ren' : '') : '') }}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="seat_form_dropdown">
+                                        <h6 class="dropdown-header">Adults</h6>
+                                        <div class="btn-group" role="group" aria-label="adultsGroup">
+                                          <button type="button" :disabled="search.seats.adults === 1" @click.stop.prevent="search.seats.adults -= (search.seats.adults > 1 ? 1 : 0)" class="btn btn-alt-secondary">
+                                            <i class="fa fa-minus"></i>
+                                          </button>
+                                          <button type="button" class="btn btn-alt-secondary" disabled="true">
+                                            {{ search.seats.adults }}
+                                          </button>
+                                          <button type="button" :disabled="search.seats.adults === 9" @click.stop.prevent="search.seats.adults += (search.seats.adults < 9 ? 1 : 0)" class="btn btn-alt-secondary">
+                                          <i class="fa fa-plus"></i>
+                                          </button>
+                                        </div>
+                                        <h6 class="dropdown-header">Children</h6>
+                                        <div class="btn-group" role="group" aria-label="childrenGroup">
+                                          <button type="button" :disabled="search.seats.children === 0" @click.stop.prevent="search.seats.children -= (search.seats.children > 0 ? 1 : 0)" class="btn btn-alt-secondary">
+                                            <i class="fa fa-minus"></i>
+                                          </button>
+                                          <button type="button" class="btn btn-alt-secondary" disabled="true">
+                                            {{ search.seats.children }}
+                                          </button>
+                                          <button type="button" :disabled="search.seats.children === 9" @click.stop.prevent="search.seats.children += (search.seats.children < 9 ? 1 : 0)" class="btn btn-alt-secondary">
+                                          <i class="fa fa-plus"></i>
+                                          </button>
+                                        </div>
                                       </div>
-                                      <h6 class="dropdown-header">Children</h6>
-                                      <div class="btn-group" role="group" aria-label="childrenGroup">
-                                        <button type="button" :disabled="search.seats.children === 0" @click.stop.prevent="search.seats.children -= (search.seats.children > 0 ? 1 : 0)" class="btn btn-alt-secondary">
-                                          <i class="fa fa-minus"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-alt-secondary" disabled="true">
-                                          {{ search.seats.children }}
-                                        </button>
-                                        <button type="button" :disabled="search.seats.children === 9" @click.stop.prevent="search.seats.children += (search.seats.children < 9 ? 1 : 0)" class="btn btn-alt-secondary">
-                                        <i class="fa fa-plus"></i>
-                                        </button>
-                                      </div>
-                                    </div>
+                                  </div>
                               </div>
-                              <div class="ml-10">
-                                <div class="form-material pt-0">
-                                  <select class="form-control" id="gen_form_select_class" name="gen_form_select_class">
-                                    <option value="Economy" selected>Economy</option>
-                                    <option value="Premium Economy">Premium Economy</option>
-                                    <option value="Business">Business</option>
-                                    <option value="First class">First class</option>
-                                  </select>
+                              <div class="col-12">
+                                <div class="form-material">
+                                  <button type="button" class="btn btn-alt-primary btn-block" id="seat_form_submit" @click="submitSearch()">
+                                    <i class="fa fa-search"></i>
+                                  </button>
                                 </div>
                               </div>
-                              <button type="button" class="btn btn-alt-primary ml-auto mr-10" id="seat_form_submit" @click="submitSearch()">
-                                <i class="fa fa-search"></i>
-                              </button>
-                              <!-- <button type="button" class="btn btn-alt-primary ml-auto mr-10" id="seat_form_submit" @click="printPage()">
-                                <i class="fa fa-print"></i>
-                              </button> -->
-                            </div>
-                            </div>
 
-                        </div>
-                      </div>
-                      <div class="col-12 d-block d-sm-none d-md-none d-lg-none d-xl-none">
-                        <div class="form-group row">
-                          <div class="col-12">
-                            <div class="btn-lg dropup" role="group">
-                                <button type="button" class="btn btn-alt-info" id="seat_form_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ (search.seats.adults > 0 ? search.seats.adults + ' adult' + (search.seats.adults > 1 ? 's' : '') : '') + (search.seats.adults > 0 && search.seats.children > 0 ? ' and ' : '') + (search.seats.children > 0 ? search.seats.children + ' child' + (search.seats.children > 1 ? 'ren' : '') : '') }}
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="seat_form_dropdown">
-                                    <h6 class="dropdown-header">Adults</h6>
-                                    <div class="btn-group" role="group" aria-label="adultsGroup">
-                                      <button type="button" :disabled="search.seats.adults === 1" @click.stop.prevent="search.seats.adults -= (search.seats.adults > 1 ? 1 : 0)" class="btn btn-alt-secondary">
-                                        <i class="fa fa-minus"></i>
-                                      </button>
-                                      <button type="button" class="btn btn-alt-secondary" disabled="true">
-                                        {{ search.seats.adults }}
-                                      </button>
-                                      <button type="button" :disabled="search.seats.adults === 9" @click.stop.prevent="search.seats.adults += (search.seats.adults < 9 ? 1 : 0)" class="btn btn-alt-secondary">
-                                      <i class="fa fa-plus"></i>
-                                      </button>
-                                    </div>
-                                    <h6 class="dropdown-header">Children</h6>
-                                    <div class="btn-group" role="group" aria-label="childrenGroup">
-                                      <button type="button" :disabled="search.seats.children === 0" @click.stop.prevent="search.seats.children -= (search.seats.children > 0 ? 1 : 0)" class="btn btn-alt-secondary">
-                                        <i class="fa fa-minus"></i>
-                                      </button>
-                                      <button type="button" class="btn btn-alt-secondary" disabled="true">
-                                        {{ search.seats.children }}
-                                      </button>
-                                      <button type="button" :disabled="search.seats.children === 9" @click.stop.prevent="search.seats.children += (search.seats.children < 9 ? 1 : 0)" class="btn btn-alt-secondary">
-                                      <i class="fa fa-plus"></i>
-                                      </button>
-                                    </div>
-                                  </div>
-                            </div>
                           </div>
-                          <div class="col-12">
-                            <div class="form-material">
-                              <select class="form-control" id="gen_form_select_class" name="gen_form_select_class">
-                                <option value="Economy" selected>Economy</option>
-                                <option value="Premium Economy">Premium Economy</option>
-                                <option value="Business">Business</option>
-                                <option value="First class">First class</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="col-12 mt-10">
-                            <div class="form-material">
-                              <button type="button" class="btn btn-alt-primary btn-block" id="seat_form_submit" @click="submitSearch()">
-                                <i class="fa fa-search"></i>
-                              </button>
-                            </div>
-                          </div>
-                              <!-- <button type="button" class="btn btn-alt-primary ml-auto mr-10" id="seat_form_submit" @click="printPage()">
-                                <i class="fa fa-print"></i>
-                              </button> -->
-                            </div>
-                            </div>
-
                         </div>
                       </div>
                     </div>
-
                   </div>
-                </div>
 
+                </div>
               </div>
+
+            </div>
 
           </div>
 
@@ -210,32 +116,31 @@
 </template>
 
 <script>
+import { ApiService } from '@/services/ApiService'
+import Datepicker from 'vuejs-datepicker'
 
 export default {
   name: 'welcome',
+  components: { Datepicker },
   data () {
     return {
       search: {
-        from: '',
-        to: '',
+        from: '...',
+        to: '...',
+        from_name: '',
+        to_name: '',
         seats: {
           adults: 1,
           children: 0
         },
-        dateFrom: null,
-        dateTo: null
+        date: new Date()
       },
-      from: '',
-      to: '',
       reverse: false,
-      genFormType: 0,
-      suggestions: []
+      suggestions: [],
+      apisearch: null
     }
   },
   watch: {
-    from: function (val) {
-      this.iataAutocomplete(val, 'from')
-    },
     '$route': 'checkError'
   },
   methods: {
@@ -244,48 +149,60 @@ export default {
         this.$swal('404 Not Found', 'You\'ve been redirected!', 'error')
       }
     },
-    printPage: function () {
-      window.print()
-    },
     submitSearch: function () {
-      this.$router.push({ name: 'search', params: this.search })
+      this.$router.push({
+        name: 'search',
+        query: {
+          from: this.reverse ? this.search.to : this.search.from,
+          from_name: this.reverse ? this.search.to_name : this.search.from_name,
+          to: this.reverse ? this.search.from : this.search.to,
+          to_name: this.reverse ? this.search.from_name : this.search.to_name,
+          date: this.search.date.toISOString().split('T')[0],
+          seatsAdult: this.search.seats.adults,
+          seatsChild: this.search.seats.children
+        }
+      })
     },
-    iataAutocomplete: function (query, label) {
-      // let suggestions = []
-      // let arr = [{name: 'Paris Charles de Gaulle International Airport', code: 'CDG'}, {name: 'US Navy Army', code: 'USN'}]
-      // for (var i = 0; i < arr.length; i++) {
-      //   if (arr[i].name.toLowerCase().includes(query.toLowerCase()) || arr[i].code.toLowerCase().includes(query.toLowerCase())) {
-      //     suggestions.push(arr[i])
-      //   }
-      // }
-      // this.suggestions = suggestions
-      // this.$http.get('https://iatacodes.org/api/v6/autocomplete.json?api_key=1b4d5cd1-a782-4e76-8cdb-cb0874976ebc&query=' + query, function(res) {
-      //   console.log(res)
-      // }, function(res) {
-      //   console.log(res)
-      // })
+    source: function (term, suggest) {
+      term = term.toLowerCase()
+      try { this.apisearch.cancel() } catch (e) {}
+      this.apisearch.get('_search', { q: `coutry:${term} OR city:${term} OR name:${term} OR iata:${term}` }, {
+        success: function (res) {
+          let suggestions = []
+          for (let i = 0; i < res.data.hits.hits.length; i++) {
+            suggestions.push(res.data.hits.hits[i])
+          }
+          suggest(suggestions)
+          self.suggestions = suggestions
+        },
+        error: function () {}
+      })
+    },
+    renderItem: function (item, search) {
+      search = search.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+      var re = new RegExp('(' + search.split(' ').join('|') + ')', 'gi')
+      return '<div class="autocomplete-suggestion" data-iata="' + item._source.iata + '" data-val="' + item._source.name + '">' + item._source.name.replace(re, '<b>$1</b>') + '</div>'
     }
   },
   mounted () {
     this.checkError()
     this.$Codebase.helpers(['datepicker'])
-    jQuery('.countries').autoComplete({
-      minChars: 1,
-      source: function (term, suggest) {
-        term = term.toLowerCase()
-
-        var countriesList = [
-          'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anguilla', 'Antigua &amp; Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia &amp; Herzegovina', 'Botswana', 'Brazil', 'British Virgin Islands', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Cape Verde', 'Cayman Islands', 'Chad', 'Chile', 'China', 'Colombia', 'Congo', 'Cook Islands', 'Costa Rica', 'Cote D Ivoire', 'Croatia', 'Cruise Ship', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'French Polynesia', 'French West Indies', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea Bissau', 'Guyana', 'Haiti', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jersey', 'Jordan', 'Kazakhstan', 'Kenya', 'Kuwait', 'Kyrgyz Republic', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Mauritania', 'Mauritius', 'Mexico', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Montserrat', 'Morocco', 'Mozambique', 'Namibia', 'Nepal', 'Netherlands', 'Netherlands Antilles', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Norway', 'Oman', 'Pakistan', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Reunion', 'Romania', 'Russia', 'Rwanda', 'Saint Pierre &amp; Miquelon', 'Samoa', 'San Marino', 'Satellite', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sri Lanka', 'St Kitts &amp; Nevis', 'St Lucia', 'St Vincent', 'St. Lucia', 'Sudan', 'Suriname', 'Swaziland', 'Sweden', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Timor L\'Este', 'Togo', 'Tonga', 'Trinidad &amp; Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks &amp; Caicos', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Venezuela', 'Vietnam', 'Virgin Islands (US)', 'Yemen', 'Zambia', 'Zimbabwe'
-        ]
-        var suggestions = []
-
-        for (let i = 0; i < countriesList.length; i++) {
-          if (~countriesList[i].toLowerCase().indexOf(term)) {
-            suggestions.push(countriesList[i])
-          }
-        }
-
-        suggest(suggestions)
+    this.apisearch = new ApiService('http://163.172.174.12:9200/', false)
+    var self = this
+    jQuery('#gen_form_from').autoComplete({
+      source: this.source,
+      renderItem: this.renderItem,
+      onSelect: function (e, term, item) {
+        self.search.from = item.data('iata')
+        self.search.from_name = item.data('val')
+      }
+    })
+    jQuery('#gen_form_to').autoComplete({
+      source: this.source,
+      renderItem: this.renderItem,
+      onSelect: function (e, term, item) {
+        self.search.to = item.data('iata')
+        self.search.to_name = item.data('val')
       }
     })
   }

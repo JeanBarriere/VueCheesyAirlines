@@ -3,7 +3,7 @@
     <div class="block-content block-content-full clearfix">
       <div class="d-flex flex-row align-items-start">
         <div class="align-self-stretch text-center mr-20">
-          <div class="img-avatar img-avatar-thumb bg-f5" alt="company loader"></div>
+          <div class="img-avatar img-avatar-thumb img-company-thumb"></div>
           <div class="wp-75 bg-f5 hp-20 border-radius-3x"></div>
         </div>
         <div class="align-self-stretch mr-20">

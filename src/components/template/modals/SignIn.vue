@@ -71,13 +71,13 @@ export default {
   name: 'modal-sign-in',
   data: () => ({
     user: {
-      email: this.getUserEmail,
+      email: '',
       password: ''
     },
     signInLoad: false
   }),
   computed: {
-    ...mapGetters(['isSaved', 'getUserEmail', 'getUserName'])
+    ...mapGetters(['isSaved', 'getUserEmail', 'getUserName', 'getUserToken'])
   },
   methods: {
     ...mapMutations(['unsave']),
@@ -87,6 +87,7 @@ export default {
       self.signInLoad = true
       this.login(this.user).then(() => {
         self.signInLoad = false
+        self.$api.set(self.getUserToken)
         jQuery('#modal-signin').modal('hide')
         this.$notify({
           title: `Welcome back ${this.getUserName}`,
@@ -105,6 +106,9 @@ export default {
       jQuery('#modal-signin').modal('hide')
       jQuery('#modal-signup').modal('show')
     }
+  },
+  mounted: function () {
+    this.user.email = this.getUserEmail
   }
 }
 </script>
