@@ -165,8 +165,8 @@ export default {
       })
     },
     buy: function () {
+      var self = this
       if (this.isLoggedIn) {
-        var self = this
         this.$checkout.open({
           name: `Flight ${this.$route.query.from} - ${this.$route.query.to}`,
           email: this.getUserEmail,
@@ -180,7 +180,7 @@ export default {
         self.$swal(
           'Login required',
           'You need to login to purchase your order',
-          'warn'
+          'warning'
         ).then(() => {
           $('#modal-signin').modal('show')
         })

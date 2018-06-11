@@ -76,8 +76,9 @@
               <loader-book />
             </div>
             <div v-else v-for="booking in bookings" class="col-md-6 col-xl-3">
-                <div class="block block-rounded ribbon ribbon-modern ribbon-primary text-center">
-                    <div class="ribbon-box">$ {{ booking.cost / 100 }}</div>
+                <div class="block block-rounded ribbon ribbon-modern text-center" :class="{'ribbon-primary': booking.status !== 'Canceled', 'ribbon-danger': booking.status === 'Canceled'}">
+                  <div class="ribbon-box" v-if="booking.status !== 'Canceled'">$ {{ booking.cost / 100 }}</div>
+                  <div class="ribbon-box" v-else>Canceled</div>
                     <div class="block-content block-content-full">
                         <div class="item item-circle bg-danger text-danger-light mx-auto my-20">
                             <i class="fa fa-globe"></i>
